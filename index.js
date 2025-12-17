@@ -46,4 +46,47 @@ app.get('/api/dolci/:id', async (req, res) => {
   }
 });
 
+//POST: creare un dolce
+app.post('/api/dolci', async (req, res) => {
+  const { nome, descrizione, immagine } = req.body;
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('nome', sql.NVarChar(100), nome)
+      .input('descrizione', sql.NVarChar(255), descrizione)
+      .input('immagine', sql.NVarChar(255), immagine)
+      .query('INSERT INTO Dolci (nome, descrizione, immagine) VALUES (@nome, @descrizione, @immagine); SELECT SCOPE_IDENTITY() AS id');
+    res.json({ success: true, id: result.recordset[0].id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//PUT: aggiornare un dolce
+app.put('/api/dolci/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, descrizione, immagine } = req.body;
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('nome', sql.NVarChar(100), nome)
+      .input('descrizione', sql.NVarChar(255), descrizione)
+      .input('immagine', sql.NVarChar(255), immagine)
+      .query('UPDATE Dolci SET nome=@nome, descrizione=@descrizione, immagine=@immagine WHERE id=@id; SELECT @@ROWCOUNT AS count');
+
+    if (result.recordset[0].count === 0)
+      return res.status(404).json({ success: false, message: 'Dolce non trovato' });
+    
+    res.json({ success: true, message: 'Dolce aggiornato' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//avvio server
+app.listen(3000);
+
 
