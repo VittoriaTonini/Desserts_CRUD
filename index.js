@@ -86,6 +86,25 @@ app.put('/api/dolci/:id', async (req, res) => {
   }
 });
 
+//DELETE: eliminare un dolce
+app.delete('/api/dolci/:id', async (req, res) => {
+  const { id } = req.params; // Prendiamo l'id del dolce da eliminare
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query('DELETE FROM Dolci WHERE id=@id; SELECT @@ROWCOUNT AS count');
+
+    if (result.recordset[0].count === 0)
+      return res.status(404).json({ success: false, message: 'Dolce non trovato' });
+
+    res.json({ success: true, message: 'Dolce eliminato' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 //avvio server
 app.listen(3000);
 
