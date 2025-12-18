@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Desserts CRUD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Desserts</h1>
+
+  <form id="form">
+    <input type="hidden" id="id">
+    <input type="text" id="nome" placeholder="Nome dolce" required>
+    <input type="text" id="descrizione" placeholder="Descrizione">
+    <input type="text" id="immagine" placeholder="Immagine (es: tiramisu.jpg)">
+    <button type="submit">Salva</button>
+  </form>
+
+  <hr>
+
+  <div id="lista"></div>
+
+  <script src="dolciUI.js"></script>
+</body>
+
+</html>
