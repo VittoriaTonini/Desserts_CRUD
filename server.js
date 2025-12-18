@@ -49,17 +49,17 @@ app.get('/api/dolci/:id', async (req, res) => {
 
 // POST: creare un dolce
 app.post('/api/dolci', async (req, res) => {
-  const { nome, descrizione, immagine } = req.body;
+  const { name, description, image } = req.body;
 
   try {
     const pool = await poolPromise;
     const result = await pool.request()
-      .input('nome', sql.NVarChar(100), nome)
-      .input('descrizione', sql.NVarChar(255), descrizione)
-      .input('immagine', sql.NVarChar(255), immagine)
+      .input('name', sql.NVarChar(100), name)
+      .input('description', sql.NVarChar(255), description)
+      .input('image', sql.NVarChar(255), image)
       .query(`
-        INSERT INTO Desserts (nome, descrizione, immagine)
-        VALUES (@nome, @descrizione, @immagine);
+        INSERT INTO Desserts (name, description, image)
+        VALUES (@name, @description, @image);
         SELECT SCOPE_IDENTITY() AS id
       `);
 
@@ -73,18 +73,18 @@ app.post('/api/dolci', async (req, res) => {
 // PUT: aggiornare un dolce
 app.put('/api/dolci/:id', async (req, res) => {
   const { id } = req.params;
-  const { nome, descrizione, immagine } = req.body;
+  const { name, description, image } = req.body;
 
   try {
     const pool = await poolPromise;
     const result = await pool.request()
       .input('id', sql.Int, id)
-      .input('nome', sql.NVarChar(100), nome)
-      .input('descrizione', sql.NVarChar(255), descrizione)
-      .input('immagine', sql.NVarChar(255), immagine)
+      .input('name', sql.NVarChar(100), name)
+      .input('description', sql.NVarChar(255), description)
+      .input('image', sql.NVarChar(255), image)
       .query(`
         UPDATE Desserts
-        SET nome=@nome, descrizione=@descrizione, immagine=@immagine
+        SET name=@name, description=@description, image=@image
         WHERE id=@id;
         SELECT @@ROWCOUNT AS count
       `);
